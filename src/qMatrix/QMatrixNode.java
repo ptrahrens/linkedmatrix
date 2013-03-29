@@ -8,88 +8,152 @@ package qMatrix;
  *
  */
 public class QMatrixNode<T> {
-	QMatrixNode<T> up;
-	QMatrixNode<T> down;
-	QMatrixNode<T> left;
-	QMatrixNode<T> right;
-	public T item;
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public QMatrixNode(T item, QMatrixNode<T> up, QMatrixNode<T> down, QMatrixNode<T> left, QMatrixNode<T> right){
-		this.item = item;
-		if(item instanceof QMatrixNodeAware){
-			((QMatrixNodeAware) item).setOMatrixNode(this);
-		}
-		this.up = up;
-		this.down = down;
-		this.left = left;
-		this.right = right;
-	}
-	public QMatrixNode<T> up(){
-		if(this.up instanceof QMatrixSentinel){
-			return null;
-		}
-		return this.up;
-	}
-	public QMatrixNode<T> up(int i){
-		if(i == 0){
-			return this;
-		}else if(i < 0){
-			assert this.down() != null:"Matrix index out of bounds.";
-			return this.down().up(i + 1);
-		}else{
-			assert this.up() != null:"Matrix index out of bounds.";
-			return this.up().up(i - 1);
-		}
-	}
-	public QMatrixNode<T> down(){
-		if(this.down instanceof QMatrixSentinel){
-			return null;
-		}
-		return this.down;
-	}
-	public QMatrixNode<T> down(int i){
-		if(i == 0){
-			return this;
-		}else if(i < 0){
-			assert this.up() != null:"Matrix index out of bounds.";
-			return this.up().down(i + 1);
-		}else{
-			assert this.down() != null:"Matrix index out of bounds.";
-			return this.down().down(i - 1);
-		}
-	}
-	public QMatrixNode<T> left(){
-		if(this.left instanceof QMatrixSentinel){
-			return null;
-		}
-		return this.left;
-	}
-	public QMatrixNode<T> left(int j){
-		if(j == 0){
-			return this;
-		}else if(j < 0){
-			assert this.right() != null:"Matrix index out of bounds.";
-			return this.right().left(j + 1);
-		}else{
-			assert this.left() != null:"Matrix index out of bounds.";
-			return this.left().left(j - 1);
-		}
-	}
-	public QMatrixNode<T> right(){
-		if(this.right instanceof QMatrixSentinel){
-			return null;
-		}
-		return this.right;
-	}
-	public QMatrixNode<T> right(int j){
-		if(j == 0){
-			return this;
-		}else if(j < 0){
-			assert this.left() != null:"Matrix index out of bounds.";
-			return this.left().right(j + 1);
-		}else{
-			assert this.right() != null:"Matrix index out of bounds.";
-			return this.right().right(j - 1);
-		}
-	}
+  QMatrix<T> matrix;
+  QColumn<T> column;
+  QRow<T> row;
+  T item;
+  QMatrixNode<T> up;
+  QMatrixNode<T> down;
+  QMatrixNode<T> left;
+  QMatrixNode<T> right;
+  QMatrixNode(QMatrix<T> matrix, QRow<T> row, QColumn<T> column, T item, QMatrixNode<T> up, QMatrixNode<T> down, QMatrixNode<T> left, QMatrixNode<T> right){
+    this.matrix = matrix;
+    this.row = row;
+    this.column = column;
+    this.item = item;
+    this.up = up;
+    this.down = down;
+    this.left = left;
+    this.right = right;
+  }
+
+  public boolean isValidNode(){
+    return this.matrix != null;
+  }
+
+  public T item() throws InvalidNodeException{
+    if(!this.isValidNode()){
+      throw new InvalidNodeException();
+    }
+    return this.item;
+  }
+
+  public void setItem(T item) throws InvalidNodeException{
+    if(!this.isValidNode()){
+      throw new InvalidNodeException();
+    }
+    this.item = item;
+  }
+
+  public QRow<T> row() throws InvalidNodeException{
+    if(!this.isValidNode()){
+      throw new InvalidNodeException();
+    }
+    return this.row;
+  }
+
+  public QColumn<T> column() throws InvalidNodeException{
+    if(!this.isValidNode()){
+      throw new InvalidNodeException();
+    }
+    return this.column;
+  }
+
+  public QMatrixNode<T> up() throws InvalidNodeException{
+    if(!this.isValidNode()){
+      throw new InvalidNodeException();
+    }
+    return this.up;
+  }
+  public QMatrixNode<T> up(int i) throws InvalidNodeException{
+    if(i == 0){
+      return this;
+    }else if(i < 0){
+      return this.down(i * -1);
+    }else{
+      return this.up().up(i - 1);
+    }
+  }
+  public QMatrixNode<T> down() throws InvalidNodeException{
+    if(!this.isValidNode()){
+      throw new InvalidNodeException();
+    }
+    return this.down;
+  }
+  public QMatrixNode<T> down(int i) throws InvalidNodeException{
+    if(i == 0){
+      return this;
+    }else if(i < 0){
+      return this.up(i * -1);
+    }else{
+      return this.down().down(i - 1);
+    }
+  }
+  public QMatrixNode<T> left() throws InvalidNodeException{
+    if(!this.isValidNode()){
+      throw new InvalidNodeException();
+    }
+    return this.left;
+  }
+  public QMatrixNode<T> left(int j) throws InvalidNodeException{
+    if(j == 0){
+      return this;
+    }else if(j < 0){
+      return this.right(j * -1);
+    }else{
+      return this.left().left(j - 1);
+    }
+  }
+  public QMatrixNode<T> right() throws InvalidNodeException{
+    if(!this.isValidNode()){
+      throw new InvalidNodeException();
+    }
+    return this.right;
+  }
+  public QMatrixNode<T> right(int j) throws InvalidNodeException{
+    if(j == 0){
+      return this;
+    }else if(j < 0){
+      return this.left(j * -1);
+    }else{
+      return this.right().right(j - 1);
+    }
+  }
+
+  protected QMatrixNode<T> utilUp(int j){
+    if(j == 0){
+      return this;
+    }else if(j < 0){
+      return this.utilDown(j * -1);
+    }else{
+      return this.up.utilUp(j - 1);
+    }
+  } 
+  protected QMatrixNode<T> utilDown(int j){
+    if(j == 0){
+      return this;
+    }else if(j < 0){
+      return this.utilUp(j * -1);
+    }else{
+      return this.down.utilDown(j - 1);
+    }
+  }
+  protected QMatrixNode<T> utilLeft(int j){
+    if(j == 0){
+      return this;
+    }else if(j < 0){
+      return this.utilRight(j * -1);
+    }else{
+      return this.left.utilLeft(j - 1);
+    }
+  }
+  protected QMatrixNode<T> utilRight(int j){
+    if(j == 0){
+      return this;
+    }else if(j < 0){
+      return this.utilLeft(j * -1);
+    }else{
+      return this.right.utilRight(j - 1);
+    }
+  } 
 }
