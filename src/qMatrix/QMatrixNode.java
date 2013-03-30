@@ -160,14 +160,4 @@ public class QMatrixNode<T> {
       return this.right.utilRight(j - 1);
     }
   } 
-  protected void delete(){
-    this.up = null;
-    this.down = null;
-    this.left = null;
-    this.right = null;
-    this.item = null;
-    this.matrix = null;
-    this.column = null;
-    this.row = null;
-  }
 }
