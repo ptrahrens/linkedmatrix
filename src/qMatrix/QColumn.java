@@ -3,10 +3,10 @@ package qMatrix;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class QColumn<T> implements Iterable<T>{
-	protected QMatrixNode<T> head;
-	protected QMatrix<T> matrix;
-	QColumn(QMatrix<T> matrix, QMatrixNode<T> columnSentinel){
+public class QColumn<E> implements Iterable<E>{
+	protected QMatrixNode<E> head;
+	protected QMatrix<E> matrix;
+	QColumn(QMatrix<E> matrix, QMatrixNode<E> columnSentinel){
 	  this.matrix = matrix;
 		this.head = columnSentinel;
 	}
@@ -14,16 +14,16 @@ public class QColumn<T> implements Iterable<T>{
 	  return this.matrix != null;
 	}
 	
-  protected QColumn<T> insertLeft(Iterable<T> newColumnItems) throws InvalidColumnException{
+  protected QColumn<E> insertLeft(Iterable<E> newColumnItems) throws InvalidColumnException{
     if(!this.isValidColumn()){
       throw new InvalidColumnException();
     }
-    QMatrixNode<T> current;
+    QMatrixNode<E> current;
     this.head.left.right = this.matrix.newNode(null, this.head.row, null, null, null, null, this.head.left, this.head);
     this.head.left = this.head.left.right;
-    this.head.left.column = new QColumn<T>(this.matrix, this.head.left);
+    this.head.left.column = new QColumn<E>(this.matrix, this.head.left);
     current = this.head.left;
-    Iterator<T> newColumnIterator = newColumnItems.iterator();
+    Iterator<E> newColumnIterator = newColumnItems.iterator();
     while(newColumnIterator.hasNext()){
       current.down = this.matrix.newNode(this.matrix, current.right.down.row, current.column, newColumnIterator.next(), current, this.head.left, current.left.down, current.right.down);
       current.right.down.left = current.down;
@@ -38,16 +38,16 @@ public class QColumn<T> implements Iterable<T>{
     return this.head.left.column;
   }
   
-	protected QColumn<T> insertRight(Iterable<T> newColumnItems) throws InvalidColumnException{
+	protected QColumn<E> insertRight(Iterable<E> newColumnItems) throws InvalidColumnException{
     if(!this.isValidColumn()){
       throw new InvalidColumnException();
     }
-    QMatrixNode<T> current;
+    QMatrixNode<E> current;
     this.head.right.left = this.matrix.newNode(null, this.head.row, null, null, null, null, this.head, this.head.right);
     this.head.right = this.head.right.left;
-    this.head.right.column = new QColumn<T>(this.matrix, this.head.right);
+    this.head.right.column = new QColumn<E>(this.matrix, this.head.right);
     current = this.head.right;
-    Iterator<T> newColumnIterator = newColumnItems.iterator();
+    Iterator<E> newColumnIterator = newColumnItems.iterator();
     while(newColumnIterator.hasNext()){
       current.down = this.matrix.newNode(this.matrix, current.left.down.row, current.column, newColumnIterator.next(), current, this.head.right, current.left.down, current.right.down);
       current.left.down.right = current.down;
@@ -61,36 +61,83 @@ public class QColumn<T> implements Iterable<T>{
     this.matrix.n++;
     return this.head.right.column;
   }
+	
+	public void remove() throws InvalidColumnException{
+	  if(!this.isValidColumn()){
+	    throw new InvalidColumnException();
+	  }
+	  QMatrixNode<E> current;
+	  QMatrixNode<E> next = this.head.down;
+	  do{
+      current = next;
+	    current.left.right = current.right;
+	    current.right.left = current.left;
+	    next = current.down;
+	    current.up = null;
+	    current.down = null;
+	    current.left = null;
+	    current.right = null;
+	    current.item = null;
+	    current.matrix = null;
+	    current.column = null;
+	    current.row = null;
+	  }while(current != this.head);
+	  this.matrix.n--;
+	  if(this.matrix.n == 0){
+	    while(this.matrix.head.down != this.matrix.head){
+	      try {
+          this.matrix.head.down.row.remove();
+        } catch (InvalidRowException e) {
+          e.printStackTrace();
+        }
+	      this.matrix.m--;
+	    }
+	  }
+	  this.matrix = null;
+	  this.head = null;
+	}
 
-  public class QColumnIterator<U> implements Iterator<U>{
-    protected QMatrixNode<U> head;
-    protected QMatrixNode<U> current;
-    public QColumnIterator(QColumn<U> column){
+  public class QColumnIterator<F> implements Iterator<F>{
+    protected QMatrixNode<F> head;
+    protected QMatrixNode<F> current;
+    protected boolean canRemove;
+    public QColumnIterator(QColumn<F> column){
       this.head = column.head;
-      this.current = column.head;
+      this.current = column.head.down;
+      this.canRemove = false;
     }
     @Override
     public boolean hasNext() {
-      return this.current.down != this.head;
+      return this.current != this.head;
     }
 
     @Override
-    public U next() {
+    public F next() {
       if(!this.hasNext()){
         throw new NoSuchElementException();
       }
       this.current = this.current.down;
-      return this.current.item;
+      this.canRemove = true;
+      return this.current.up.item;
     }
 
     @Override
     public void remove() {
-      return; //TODO make this method remove the row the last element was in.
+      if(this.canRemove){
+        try {
+          this.current.up.row.remove();
+        } catch (InvalidRowException e) {
+          e.printStackTrace();
+        }
+        this.canRemove = false;
+      }else{
+        throw new IllegalStateException();
+      }
     }
     
   }
   @Override
-  public Iterator<T> iterator(){
-    return new QColumnIterator<T>(this);
+  public Iterator<E> iterator(){
+    return new QColumnIterator<E>(this);
   }
 }

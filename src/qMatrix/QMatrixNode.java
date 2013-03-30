@@ -16,6 +16,7 @@ public class QMatrixNode<T> {
   QMatrixNode<T> down;
   QMatrixNode<T> left;
   QMatrixNode<T> right;
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   QMatrixNode(QMatrix<T> matrix, QRow<T> row, QColumn<T> column, T item, QMatrixNode<T> up, QMatrixNode<T> down, QMatrixNode<T> left, QMatrixNode<T> right){
     this.matrix = matrix;
     this.row = row;
@@ -25,6 +26,9 @@ public class QMatrixNode<T> {
     this.down = down;
     this.left = left;
     this.right = right;
+    if(item instanceof QMatrixNodeAware<?>){
+      ((QMatrixNodeAware) item).setQMatrixNode(this);
+    }
   }
 
   public boolean isValidNode(){
@@ -156,4 +160,14 @@ public class QMatrixNode<T> {
       return this.right.utilRight(j - 1);
     }
   } 
+  protected void delete(){
+    this.up = null;
+    this.down = null;
+    this.left = null;
+    this.right = null;
+    this.item = null;
+    this.matrix = null;
+    this.column = null;
+    this.row = null;
+  }
 }
