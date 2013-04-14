@@ -111,6 +111,8 @@ public class TileApplet extends Applet implements ItemListener, Runnable, Action
 		//Make the update thread
 		this.updateThread = new Thread(this);
 		this.updating = false;
+		this.running = true;
+		this.updateThread.start();
 	}
 	
 	public void choose(String newItem){
@@ -147,40 +149,43 @@ public class TileApplet extends Applet implements ItemListener, Runnable, Action
 			if(this.updating){
 				this.currentTilePanel.calculateTiles();
 				this.currentTilePanel.updateTiles();
-			}
-            try{
-                 Thread.sleep(this.speed.getWait());
-            }
-            catch (InterruptedException e){
-                 System.out.println(e);
-            }
+			}try{
+        Thread.sleep(this.speed.getWait());
+      }catch(InterruptedException e){
+        System.out.println(e);
+      }
 		}
 	}
 	
 	@Override
 	public void start(){
-		this.running = true;
-		this.updateThread.start();
+    this.updating = true;
 	}
 	
 	@Override
 	public void stop(){
+    this.updating = false;
+	}
+
+  @Override
+  public void destroy(){
 		this.running = false;
 		try{
 			this.updateThread.join();
 		}
 		catch (InterruptedException e){
-			System.out.println(e);
+			System.err.println(e);
 		}
-	}
+    this.updateThread = null;
+  }
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		String action = ae.getActionCommand();
 		if(action.equals("start")){
-			this.updating = true;
+			this.start();
 		}else if(action.equals("stop")){
-			this.updating = false;
+			this.stop();
 		}else if(action.equals("reset")){
 			this.updating = false;
 			this.currentTilePanel.resetTiles();

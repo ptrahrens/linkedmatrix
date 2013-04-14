@@ -21,21 +21,27 @@ import java.util.NoSuchElementException;
  * (not counting sentinel column) m is the number of rows (not counting sentinel
  * row) note that connections wrap to other side
  * 
- * | | | | | --s--c--c--c--c-- | | | | | --r--q--q--q--q-- | | | | |
- * --r--q--q--q--q-- | | | | |
+ *   |  |  |  |  | 
+ * --s--c--c--c--c--
+ *   |  |  |  |  | 
+ * --r--q--q--q--q--
+ *   |  |  |  |  |
+ * --r--q--q--q--q-- 
+ *   |  |  |  |  |
  * 
- * QMatrix Invariants: 1) head != null 2) for every QMatrixNode q in the matrix,
- * q.up != null 3) for every QMatrixNode q in the matrix, q.down != null 4) for
- * every QMatrixNode q in the matrix, q.left != null 5) for every QMatrixNode q
- * in the matrix, q.right != null 6) for every QMatrixNode q in the matrix, if
- * q.up == t, then t.down == q 7) for every QMatrixNode q in the matrix, if
- * q.down == t, then t.up == q 8) for every QMatrixNode q in the matrix, if
- * q.left == t, then t.right == q 9) for every QMatrixNode q in the matrix, if
- * q.right == t, then t.left == q 10) for every QMatrixNode q except the head,
- * row, and column sentinels, q.matrix = u 11) m is the number of QMatrixNodes
- * (not counting head or column sentinels) that can be accessed by a sequence of
- * "down" references. 12) n is the number of QMatrixNodes (not counting head or
- * row sentinels) that can be accessed by a sequence of "right" references
+ * QMatrix Invariants: 
+ * 1) head != null
+ * 2) for every QMatrixNode q in the matrix, q.up != null 
+ * 3) for every QMatrixNode q in the matrix, q.down != null 
+ * 4) for every QMatrixNode q in the matrix, q.left != null 
+ * 5) for every QMatrixNode q in the matrix, q.right != null 
+ * 6) for every QMatrixNode q in the matrix, if q.up == t, then t.down == q 
+ * 7) for every QMatrixNode q in the matrix, if q.down == t, then t.up == q 
+ * 8) for every QMatrixNode q in the matrix, if q.left == t, then t.right == q 
+ * 9) for every QMatrixNode q in the matrix, if q.right == t, then t.left == q 
+ * 10) for every QMatrixNode q except the head, row, and column sentinels, q.matrix = u 
+ * 11) m is the number of QMatrixNodes (not counting head or column sentinels) that can be accessed by a sequence of "down" references. 
+ * 12) n is the number of QMatrixNodes (not counting head or row sentinels) that can be accessed by a sequence of "right" references
  * 
  * @author Peter Ahrens
  * 
