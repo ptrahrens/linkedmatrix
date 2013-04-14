@@ -51,7 +51,7 @@ import java.util.NoSuchElementException;
  * 9) for every QMatrixNode q in the matrix, if q.right == t, then t.left == q 
  * 10) for every QMatrixNode q except the head, row, and column sentinels, q.matrix = u 
  * 11) m is the number of QMatrixNodes (not counting head or column sentinels) that can be accessed by a sequence of "down" references. 
- * 12) n is the number of QMatrixNodes (not counting head or row sentinels) that can be accessed by a sequence of "right" references
+ * 12) n is the number of QMatrixNodes (not counting head or row sentinels) that can be accessed by a sequence of "right" references.
  * 
  * @author Peter Ahrens
  * 
