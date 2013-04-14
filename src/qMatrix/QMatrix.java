@@ -23,11 +23,21 @@ import java.util.NoSuchElementException;
  * 
  *   |  |  |  |  | 
  * --s--c--c--c--c--
- *   |  |  |  |  | 
+ *   |  |  |  |  |
  * --r--q--q--q--q--
  *   |  |  |  |  |
  * --r--q--q--q--q-- 
  *   |  |  |  |  |
+ *   
+ * Performance:
+ *                                Linked Matrix 2D Array   2D Linked List
+ *           Lookup Node At(i,j): O(i + j)      O(1)       O(i + j)
+ *           Insertion(row at j): O(n + j)      O(m-j)     O(j)
+ *        Insertion(column at i): O(m + i)      O(m(n-i))  O(mi)
+ *             Removal(row at j): O(n + j)      O(m-j)     O(j)
+ *          Removal(column at i): O(m + i)      O(m(n-i))  O(mi)
+ *    Get Adjacent Node(up/down): O(1)          O(1)       O(n)
+ * Get Adjacent Node(left/right): O(1)          O(1)       O(1)
  * 
  * QMatrix Invariants: 
  * 1) head != null
