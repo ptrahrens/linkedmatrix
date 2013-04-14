@@ -152,7 +152,8 @@ public class TileApplet extends Applet implements ItemListener, Runnable, Action
 			}try{
         Thread.sleep(this.speed.getWait());
       }catch(InterruptedException e){
-        System.out.println(e);
+        Thread.currentThread().interrupt();
+        break;
       }
 		}
 	}
@@ -172,8 +173,7 @@ public class TileApplet extends Applet implements ItemListener, Runnable, Action
 		this.running = false;
 		try{
 			this.updateThread.join();
-		}
-		catch (InterruptedException e){
+		}catch(InterruptedException e){
 			System.err.println(e);
 		}
     this.updateThread = null;
