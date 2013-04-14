@@ -32,12 +32,12 @@ public class TileApplet extends Applet implements ItemListener, Runnable, Action
 	protected final int speedInputSize = 7;
 	protected final int maxSpeed = 1000;
 	protected final int initSpeed = 900;
-	protected final int numRows = 24;
-	protected final int numColumns = 24;
+	protected final int numRows = 10;
+	protected final int numColumns = 10;
 	protected String currentTilePanelString = "propagation";
 
 	protected final double dropFactor = 2;
-	protected final double propagationFactor = 0.9;
+	protected final double propagationFactor = 0.7;
 	protected final double evaporationFactor = 0.7;
 	protected final NumericColor[] propagationColors = {new NumericColor(1,0,0),
 														new NumericColor(0,1,0), 
