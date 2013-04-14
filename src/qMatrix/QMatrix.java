@@ -16,10 +16,16 @@ import java.util.NoSuchElementException;
  * This concept could be confusing, so here is an ascii diagram of what this
  * looks like:
  * 
- * Diagram of a sample 2x4 QMatrix structure: Key: s is the main sentinel r is a
- * row sentinel c is a column sentinel q is a node n is the number of columns
- * (not counting sentinel column) m is the number of rows (not counting sentinel
- * row) note that connections wrap to other side
+ * Diagram of a sample 2x4 QMatrix structure:
+ *   Key: 
+ *     s is the main sentinel
+ *     r is a row sentinel
+ *     c is a column sentinel 
+ *     q is a node 
+ *     n is the number of columns (not counting sentinel column) 
+ *     m is the number of rows (not counting sentinel row) 
+ *     
+ *     note that connections wrap to other side
  * 
  *   |  |  |  |  | 
  * --s--c--c--c--c--
