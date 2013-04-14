@@ -2,6 +2,8 @@ package tilePanel;
 
 import java.awt.event.MouseEvent;
 
+import qMatrix.InvalidNodeException;
+
 @SuppressWarnings("serial")
 public class PropagationTile extends Tile {
 
@@ -33,23 +35,20 @@ public class PropagationTile extends Tile {
 
 	@Override
 	public void calculate() {
-		((PropagationTile) this.node.up().item).additiveColor = 
-				((PropagationTile) this.node.up().item).additiveColor.add(this.color.multiply(this.propagation));
-		((PropagationTile) this.node.right().item).additiveColor = 
-				((PropagationTile) this.node.right().item).additiveColor.add(this.color.multiply(this.propagation));
-		((PropagationTile) this.node.down().item).additiveColor = 
-				((PropagationTile) this.node.down().item).additiveColor.add(this.color.multiply(this.propagation));
-		((PropagationTile) this.node.left().item).additiveColor = 
-				((PropagationTile) this.node.left().item).additiveColor.add(this.color.multiply(this.propagation));
-		((PropagationTile) this.node.up().right().item).additiveColor = 
-				((PropagationTile) this.node.up().right().item).additiveColor.add(this.color.multiply(this.propagation / PropagationPanel.diagonalLength));
-		((PropagationTile) this.node.right().down().item).additiveColor = 
-				((PropagationTile) this.node.right().down().item).additiveColor.add(this.color.multiply(this.propagation / PropagationPanel.diagonalLength));
-		((PropagationTile) this.node.down().left().item).additiveColor = 
-				((PropagationTile) this.node.down().left().item).additiveColor.add(this.color.multiply(this.propagation / PropagationPanel.diagonalLength));
-		((PropagationTile) this.node.left().up().item).additiveColor = 
-				((PropagationTile) this.node.left().up().item).additiveColor.add(this.color.multiply(this.propagation / PropagationPanel.diagonalLength));
-
+	  double x;
+	  try{
+	    for(int i = 0; i < 8; i++){
+	      if(i % 2 == 0){
+	        x = this.propagation;
+	      }else{
+	        x = this.propagation / PropagationPanel.diagonalLength;
+	      }
+	      ((PropagationTile) this.node.neighbor(i).item()).additiveColor = 
+	          ((PropagationTile) this.node.neighbor(i).item()).additiveColor.add(this.color.multiply(x));
+	    }
+	  }catch(InvalidNodeException e){
+	    System.err.print(e);
+	  }
 		this.color = this.color.multiply(this.evaporation);
 	}
 

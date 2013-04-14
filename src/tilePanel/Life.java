@@ -2,6 +2,8 @@ package tilePanel;
 
 import java.awt.event.MouseEvent;
 
+import qMatrix.InvalidNodeException;
+
 @SuppressWarnings("serial")
 public class Life extends Tile{
 	
@@ -28,14 +30,13 @@ public class Life extends Tile{
 	@Override
 	public void calculate() {
 		this.numAliveNeighbors = 0;
-		this.numAliveNeighbors += ((Life) this.node.up().item).isAlive ? 1 : 0;
-		this.numAliveNeighbors += ((Life) this.node.right().item).isAlive ? 1 : 0;
-		this.numAliveNeighbors += ((Life) this.node.down().item).isAlive ? 1 : 0;
-		this.numAliveNeighbors += ((Life) this.node.left().item).isAlive ? 1 : 0;
-		this.numAliveNeighbors += ((Life) this.node.up().right().item).isAlive ? 1 : 0;
-		this.numAliveNeighbors += ((Life) this.node.right().down().item).isAlive ? 1 : 0;
-		this.numAliveNeighbors += ((Life) this.node.down().left().item).isAlive ? 1 : 0;
-		this.numAliveNeighbors += ((Life) this.node.left().up().item).isAlive ? 1 : 0;
+		try{
+		  for(int i = 0; i < 8; i++){
+		    this.numAliveNeighbors += ((Life) this.node.neighbor(i).item()).isAlive ? 1 : 0;
+		  }
+		}catch(InvalidNodeException e){
+		  System.err.print(e);
+		}
 		if(this.isAlive){
 			if(this.numAliveNeighbors < 2){
 				this.willBeAlive = false;

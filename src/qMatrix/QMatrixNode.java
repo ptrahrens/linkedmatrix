@@ -16,7 +16,7 @@ public class QMatrixNode<T> {
   QMatrixNode<T> down;
   QMatrixNode<T> left;
   QMatrixNode<T> right;
-  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @SuppressWarnings({ "rawtypes", "unchecked" })//TODO make it so i don't need this
   QMatrixNode(QMatrix<T> matrix, QRow<T> row, QColumn<T> column, T item, QMatrixNode<T> up, QMatrixNode<T> down, QMatrixNode<T> left, QMatrixNode<T> right){
     this.matrix = matrix;
     this.row = row;
@@ -61,6 +61,57 @@ public class QMatrixNode<T> {
       throw new InvalidNodeException();
     }
     return this.column;
+  }
+  
+  /** neighbor looks for a neighbor of this node in a certain direction (given by an int)
+   *  It does not return invalid nodes
+   *  Diagram of directions:
+   *  7 0 1
+   *   \|/
+   *  6- -2
+   *   /|\
+   *  5 4 3
+   *  @return the node in the given direction, null if that node isn't valid.
+   */
+  public QMatrixNode<T> neighbor(int direction) throws InvalidNodeException{
+    if(!this.isValidNode()){
+      throw new InvalidNodeException();
+    }
+    direction = direction % 8;
+    if(direction < 0){
+      direction += 8;
+    }
+    QMatrixNode<T> node;
+    switch(direction){
+      case 0: node = this.up(); break;
+      case 1: node = this.up();
+        if(node != null && node.isValidNode()){
+          node = node.right();
+        }
+        break;
+      case 2: node = this.right(); break;
+      case 3: node = this.right();
+        if(node != null && node.isValidNode()){
+          node = node.down();
+        }
+        break;
+      case 4: node = this.down(); break;
+      case 5: node = this.down();
+        if(node != null && node.isValidNode()){
+          node = node.left();
+        }
+        break;
+      case 6: node = this.left(); break;
+      default: node = this.left();
+        if(node != null && node.isValidNode()){
+          node = node.up();
+        }
+        break;
+    }
+    if(node.isValidNode()){
+      return node;
+    }
+    return null;
   }
 
   public QMatrixNode<T> up() throws InvalidNodeException{

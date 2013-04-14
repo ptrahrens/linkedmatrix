@@ -25,12 +25,12 @@ public abstract class Tile extends Panel implements QMatrixNodeAware<Tile>, Mous
 	}
 	
 	@Override
-	public void setOMatrixNode(QMatrixNode<Tile> qMatrixNode) {
+	public void setQMatrixNode(QMatrixNode<Tile> qMatrixNode) {
 		this.node = qMatrixNode;
 	}
 	
 	@Override
-	public QMatrixNode<Tile> getOMatrixNode() {
+	public QMatrixNode<Tile> getQMatrixNode() {
 		return this.node;
 	}
 	

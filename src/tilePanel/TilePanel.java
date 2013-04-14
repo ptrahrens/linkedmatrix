@@ -38,7 +38,7 @@ public abstract class TilePanel extends Panel{
 				newRow.add(newTile);
 				this.add(newTile);
 			}
-			this.tiles.addRowToBottom(newRow);
+			this.tiles.insertRowBottom(newRow);
 		}
 		this.initialized = true;
 	}
